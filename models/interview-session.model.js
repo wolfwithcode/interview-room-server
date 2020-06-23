@@ -4,7 +4,8 @@ const Schema = moongoose.Schema;
 
 const interviewSessionSchema = new Schema({
     ticket: ticketSchema,
-    timeIn: {type: Date, required:true}
+    timeIn: {type: Date, required:true},
+    active: {type: Boolean, required:true},
 }, {
     timestamps: true,
 });

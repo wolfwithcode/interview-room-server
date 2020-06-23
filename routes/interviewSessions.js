@@ -15,9 +15,11 @@ router.route('/add').post((req, res) => {
     Ticket.findById(req.body.ticketId)
         .then(ticket => {
             const timeIn = new Date();
+            const active = true;
             const newInterviewSession = new InterviewSession({
                 ticket,
                 timeIn,
+                active,
             });
             newInterviewSession.save()
             .then(interview => res.json(interview))
