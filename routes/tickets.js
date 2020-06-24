@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const startOfDay = require('date-fns/startOfDay');
 const {Ticket} = require('../models/ticket.model');
 
 router.route('/').get((req, res) => {
@@ -6,6 +7,31 @@ router.route('/').get((req, res) => {
         .then(tickets => res.json(tickets))
         .catch(err => res.status(400).json('Error:' + err));
 });
+
+router.route('/today').get((req, res) => {
+    Ticket.find({"timeIn": {"$gte": startOfDay(new Date()) }})
+        .then(tickets => res.json(tickets))
+        .catch(err => res.status(400).json('Error:' + err));
+});
+
+router.route('/getStatusTicket/:id').get((req, res) => {    
+    Ticket.findById(req.params.id)
+        .then(
+            ticket => {
+                const ticketInfo = {'status': 'closed'};
+                if(ticket){
+                    const timeIn = new Date(ticket.timeIn);
+                    if( timeIn.getTime() >= startOfDay(new Date()) ){
+                        ticketInfo.status = 'waiting';
+                    }
+                }
+                return res.json(ticketInfo);
+            }
+        )
+        .catch(err => res.status(400).json('Error: '+ err));
+});
+
+
 
 router.route('/add').post((req, res) => {
 

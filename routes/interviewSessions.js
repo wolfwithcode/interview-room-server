@@ -15,13 +15,11 @@ router.route('/getProcessingTicketId').get((req, res) => {
     .findOne({"timeIn": {"$gte": startOfDay(new Date())} , "active":true})
     .then( interview => {
         console.log("interview ", interview);
-        let ticketId = ""
+        let ticketId = "";
         if( interview ){            
             ticketId = interview.ticket._id;
-        } else {
-            ticketId = '';
-        }
-        
+        } 
+        console.log("ticketId ", ticketId);
         return res.json(ticketId);
     })
     .catch(err => res.status(400).json('Error: '+ err));        
